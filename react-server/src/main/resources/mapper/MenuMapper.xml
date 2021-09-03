@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.react.mapper.MenuMapper">
+  <resultMap id="BaseResultMap" type="com.example.react.entity.Menu">
+   
+    <id column="f_id" jdbcType="VARCHAR" property="id" />
+    <result column="f_title" jdbcType="VARCHAR" property="title" />
+    <result column="f_path" jdbcType="VARCHAR" property="path" />
+    <result column="f_parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="f_index" jdbcType="INTEGER" property="index" />
+    <result column="f_icon" jdbcType="VARCHAR" property="icon" />
+    <result column="f_is_public" jdbcType="VARCHAR" property="isPublic" />
+  </resultMap>
+  
+  <select id="list" resultMap="BaseResultMap">
+    select distinct m.f_id, m.f_title, m.f_path, m.f_parent_id, m.f_icon, m.f_is_public
+    from t_menu m
+    left join t_role_permission rp
+    on rp.f_menu_id = m.f_id
+    left join t_user_role r
+    on rp.f_role_id = r.f_role_id
+    where f_is_enable = 1 and (r.f_user_id = #{userId} or m.f_is_public = 1)
+    order by m.f_parent_id,m.f_index,m.f_id
+  </select>
+</mapper>
